@@ -8,7 +8,8 @@
 
 // 头文件
 #import "BDVRClientUIManager.h"
-
+#define kScreenWidth [UIScreen mainScreen].bounds.size.width
+#define kScreenHeight  [UIScreen mainScreen].bounds.size.height
 @implementation BDVRClientUIManager
 
 #pragma mark - init & dealloc
@@ -66,12 +67,12 @@
 
 - (CGPoint)VRRecordBackgroundCenter
 {
-    return CGPointMake(145.0f, 56.0f);
+    return CGPointMake(kScreenWidth/2, kScreenHeight - 46);
 }
 
 - (CGPoint)VRRecognizeBackgroundCenter
 {
-    return CGPointMake(145.0f, 46.0f);
+    return CGPointMake(kScreenWidth/2, kScreenHeight - 46);
 }
 
 - (CGPoint)VRTintWordCenter

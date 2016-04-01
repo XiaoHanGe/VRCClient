@@ -17,6 +17,9 @@
 
 // 私有方法分类
 @interface BDVRCustomRecognitonViewController ()
+{
+    UIView *tmpView; // 背景大view
+}
 
 - (void)createInitView; // 创建初始化界面，播放提示音时会用到
 - (void)createRecordView;  // 创建录音界面
@@ -65,20 +68,20 @@
 // 自定义背景
 - (void)customBackgroundView
 {
-    UIView *tmpView = [[UIView alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRBackgroundFrame]];
+    tmpView = [[UIView alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRBackgroundFrame]];
     tmpView.backgroundColor = [UIColor whiteColor];
     self.view = tmpView;
     
     // 语音搜索Label
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, 80, 40)];
+    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, 100, 25)];
     nameLabel.text = @"语音搜索";
-    nameLabel.font = [UIFont systemFontOfSize:20];
+    nameLabel.font = [UIFont systemFontOfSize:22];
+    nameLabel.alpha = 0.6f;
     [tmpView addSubview:nameLabel];
     
     // 取消按钮
-    UIButton *cancleButton = [[UIButton alloc]initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width - 95, 15, 80, 40)];
-    [cancleButton setTitle:@"取消" forState:UIControlStateNormal];
-    cancleButton.backgroundColor = [UIColor greenColor];
+    UIButton *cancleButton = [[UIButton alloc]initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width - 40, 12, 25, 25)];
+    [cancleButton setImage:[UIImage imageNamed:@"cancleButton"] forState:UIControlStateNormal];
     [cancleButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
     [tmpView addSubview:cancleButton];
 }
@@ -442,28 +445,25 @@
     if (_dialog && _dialog.superview) 
         [_dialog removeFromSuperview];
  
-//    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"1.png"]];
-    UIImageView *tmpImageView = [[UIImageView alloc]initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - tmpImageView.frame.size.width)/2, [UIScreen mainScreen].bounds.size.height-100, 80,80)];
-    
+
+    UIImageView *tmpImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"client"]];
     tmpImageView.userInteractionEnabled = YES;
-    tmpImageView.alpha = 0.6; /* He Liqiang, TAG-130729 */
-    self.dialog = tmpImageView;
-    _dialog.backgroundColor = [UIColor greenColor];
-    _dialog.center = self.view.center;
-    [self.view addSubview:_dialog];
+//    self.dialog = tmpImageView;
+//    _dialog.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
+    [self.view addSubview:tmpImageView];
     
-    tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"microphone.png"]];
-    tmpImageView.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
-    [_dialog addSubview:tmpImageView];
-//    
-//    UILabel *tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
-//    tmpLabel.backgroundColor = [UIColor clearColor];
-//    tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
-//    tmpLabel.textColor = [UIColor whiteColor];
-//    tmpLabel.text = NSLocalizedString(@"StringVoiceRecognitonInit", nil);
-//    tmpLabel.textAlignment = NSTextAlignmentCenter;
-//    tmpLabel.center = [[BDVRClientUIManager sharedInstance] VRTintWordCenter];
-//    [_dialog addSubview:tmpLabel];
+//    tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"microphone.png"]];
+//    tmpImageView.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
+//    [_dialog addSubview:tmpImageView];
+   
+    UILabel *tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
+    tmpLabel.backgroundColor = [UIColor clearColor];
+    tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
+    tmpLabel.textColor = [UIColor whiteColor];
+    tmpLabel.text = NSLocalizedString(@"StringVoiceRecognitonInit", nil);
+    tmpLabel.textAlignment = NSTextAlignmentCenter;
+    tmpLabel.center = self.view.center;
+    [self.view addSubview:tmpLabel];
     
 //    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
@@ -482,14 +482,14 @@
     if (_dialog && _dialog.superview) 
         [_dialog removeFromSuperview];
     
-    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"1.png"]];
+    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"client"]];
+    tmpImageView.frame = CGRectMake(100, [UIScreen mainScreen].bounds.size.height - 82, 72, 72);
     tmpImageView.userInteractionEnabled = YES;
     tmpImageView.backgroundColor = [UIColor whiteColor];
-    tmpImageView.alpha = 0.6; /* He Liqiang, TAG-130729 */
+//    tmpImageView.alpha = 0.6; /* He Liqiang, TAG-130729 */
     self.dialog = tmpImageView;
-//    self.dialog.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - tmpImageView.frame.size.width)/2, [UIScreen mainScreen].bounds.size.height - tmpImageView.frame.size.height - 15, tmpImageView.frame.size.width, tmpImageView.frame.size.height);
-    _dialog.backgroundColor = [UIColor clearColor];
-    _dialog.center = self.view.center;
+    self.dialog.frame = tmpImageView.frame;
+    _dialog.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
     [self.view addSubview:_dialog];
     
     tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"microphone.png"]];
@@ -503,7 +503,7 @@
     tmpLabel.text = NSLocalizedString(@"StringVoiceRecognitonPleaseSpeak", nil);
     tmpLabel.textAlignment = NSTextAlignmentCenter;
     tmpLabel.center = [[BDVRClientUIManager sharedInstance] VRTintWordCenter];
-    [_dialog addSubview:tmpLabel];
+    [self.view addSubview:tmpLabel];
     
 //    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRLeftButtonFrame];
@@ -530,13 +530,13 @@
 {
     if (_dialog && _dialog.superview) 
         [_dialog removeFromSuperview];
+    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"client"]];
+    tmpImageView.frame = CGRectMake(100, [UIScreen mainScreen].bounds.size.height - 82, 72, 72);
+//    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"recognitionBackground.png"]];
     
-    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"recognitionBackground.png"]];
     tmpImageView.userInteractionEnabled = YES;
-    tmpImageView.alpha = 0.6; /* He Liqiang, TAG-130729 */
     self.dialog = tmpImageView;
-//    self.dialog.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - tmpImageView.frame.size.width)/2, [UIScreen mainScreen].bounds.size.height - tmpImageView.frame.size.height - 15, tmpImageView.frame.size.width, tmpImageView.frame.size.height);
-    _dialog.center = self.view.center;
+    _dialog.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
     [self.view addSubview:_dialog];
     
     tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"recognitionIcon.png"]];
@@ -549,19 +549,19 @@
     tmpLabel.textColor = [UIColor whiteColor];
     tmpLabel.text = NSLocalizedString(@"StringVoiceRecognitonIdentify", nil);
     tmpLabel.textAlignment = NSTextAlignmentCenter;
-    tmpLabel.center = [[BDVRClientUIManager sharedInstance] VRTintWordCenter];
-    [_dialog addSubview:tmpLabel];
+    tmpLabel.center = self.view.center;;
+    [self.view addSubview:tmpLabel];
     
-    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
-    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
-    tmpButton.backgroundColor = [UIColor clearColor];
-    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
-    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-    [_dialog addSubview:tmpButton];
-    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
-    tmpButton.showsTouchWhenHighlighted = YES;
+//    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
+//    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
+//    tmpButton.backgroundColor = [UIColor clearColor];
+//    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
+//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+//    [_dialog addSubview:tmpButton];
+//    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+//    tmpButton.showsTouchWhenHighlighted = YES;
     
 }
 
