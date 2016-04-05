@@ -40,12 +40,12 @@
 
 - (CGRect)VRRecordTintWordFrame
 {
-	return CGRectMake(0.0f, 0.0f, 260.0f, 42.0f);
+	return CGRectMake(kScreenWidth/2 - 130,kScreenHeight/2 - 21, 260.0f, 42.0f);
 }
 
 - (CGRect)VRRecognizeTintWordFrame
 {
-	return CGRectMake(0.0f, 0.0f, 260.0f, 42.0f);
+	return CGRectMake(kScreenWidth/2 - 130,kScreenHeight/2 - 21, 260.0f, 42.0f);
 }
 
 - (CGRect)VRLeftButtonFrame

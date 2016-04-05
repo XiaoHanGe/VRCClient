@@ -459,22 +459,22 @@
     UILabel *tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
     tmpLabel.backgroundColor = [UIColor clearColor];
     tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
-    tmpLabel.textColor = [UIColor whiteColor];
+    tmpLabel.textColor = [UIColor blackColor];
     tmpLabel.text = NSLocalizedString(@"StringVoiceRecognitonInit", nil);
     tmpLabel.textAlignment = NSTextAlignmentCenter;
     tmpLabel.center = self.view.center;
     [self.view addSubview:tmpLabel];
     
-//    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
-//    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
-//    tmpButton.backgroundColor = [UIColor clearColor];
-//    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
-//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-//    [_dialog addSubview:tmpButton];
-//    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
-//    tmpButton.showsTouchWhenHighlighted = YES;
+    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
+    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
+    tmpButton.backgroundColor = [UIColor clearColor];
+    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
+    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+    [_dialog addSubview:tmpButton];
+    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+    tmpButton.showsTouchWhenHighlighted = YES;
 }
 
 - (void)createRecordView
@@ -499,30 +499,30 @@
     UILabel *tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
     tmpLabel.backgroundColor = [UIColor clearColor];
     tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
-    tmpLabel.textColor = [UIColor whiteColor];
+    tmpLabel.textColor = [UIColor blackColor];
     tmpLabel.text = NSLocalizedString(@"StringVoiceRecognitonPleaseSpeak", nil);
     tmpLabel.textAlignment = NSTextAlignmentCenter;
-    tmpLabel.center = [[BDVRClientUIManager sharedInstance] VRTintWordCenter];
+    tmpLabel.center = self.view.center;
     [self.view addSubview:tmpLabel];
     
-//    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRLeftButtonFrame];
-//    tmpButton.backgroundColor = [UIColor clearColor];
-//    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
-//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-//    [_dialog addSubview:tmpButton];
-//    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
-//    tmpButton.showsTouchWhenHighlighted = YES;
-//    
-//    tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRRightButtonFrame];
-//    [tmpButton setTitle:NSLocalizedString(@"StringVoiceRecognitonRecordFinish", nil) forState:UIControlStateNormal];
-//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-//    [_dialog addSubview:tmpButton];
-//    [tmpButton addTarget:self action:@selector(finishRecord:) forControlEvents:UIControlEventTouchUpInside];
-//    tmpButton.showsTouchWhenHighlighted = YES;
+    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRLeftButtonFrame];
+    tmpButton.backgroundColor = [UIColor clearColor];
+    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
+    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+    [_dialog addSubview:tmpButton];
+    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+    tmpButton.showsTouchWhenHighlighted = YES;
+    
+    tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRRightButtonFrame];
+    [tmpButton setTitle:NSLocalizedString(@"StringVoiceRecognitonRecordFinish", nil) forState:UIControlStateNormal];
+    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+    [_dialog addSubview:tmpButton];
+    [tmpButton addTarget:self action:@selector(finishRecord:) forControlEvents:UIControlEventTouchUpInside];
+    tmpButton.showsTouchWhenHighlighted = YES;
     
 }
 
@@ -546,22 +546,22 @@
     UILabel *tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecognizeTintWordFrame]];
     tmpLabel.backgroundColor = [UIColor clearColor];
     tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
-    tmpLabel.textColor = [UIColor whiteColor];
+    tmpLabel.textColor = [UIColor blackColor];
     tmpLabel.text = NSLocalizedString(@"StringVoiceRecognitonIdentify", nil);
     tmpLabel.textAlignment = NSTextAlignmentCenter;
     tmpLabel.center = self.view.center;;
     [self.view addSubview:tmpLabel];
     
-//    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
-//    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
-//    tmpButton.backgroundColor = [UIColor clearColor];
-//    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
-//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-//    [_dialog addSubview:tmpButton];
-//    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
-//    tmpButton.showsTouchWhenHighlighted = YES;
+    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
+    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
+    tmpButton.backgroundColor = [UIColor clearColor];
+    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
+    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+    [_dialog addSubview:tmpButton];
+    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+    tmpButton.showsTouchWhenHighlighted = YES;
     
 }
 
@@ -698,7 +698,8 @@
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context 
 {
-    // 
+    //
+    
 }
 
 @end // BDVRCustomRecognitonViewController
