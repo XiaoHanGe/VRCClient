@@ -533,7 +533,7 @@
         [_dialog removeFromSuperview];
     
     UIImageView *tmpImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"client"]];
-    tmpImageView.frame = CGRectMake(kScreenWidth/2 - 36, kScreenHeight - 120, 72, 72);
+    tmpImageView.frame = CGRectMake(kScreenWidth/2 -36, kScreenHeight - 120, 72, 72);
     tmpImageView.userInteractionEnabled = YES;
     self.dialog = tmpImageView;
     [self.view addSubview:_dialog];
@@ -551,7 +551,16 @@
     tmpLabel.textAlignment = NSTextAlignmentCenter;
     tmpLabel.center = self.view.center;
     [self.view addSubview:tmpLabel];
-
+    
+//    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRLeftButtonFrame];
+//    tmpButton.backgroundColor = [UIColor clearColor];
+//    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
+//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+//    [_dialog addSubview:tmpButton];
+//    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+//    tmpButton.showsTouchWhenHighlighted = YES;
     
 //    tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRRightButtonFrame];
@@ -568,7 +577,7 @@
 {
     if (_dialog && _dialog.superview) 
         [_dialog removeFromSuperview];
-    UIImageView *tmpImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"client"]];
+    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"client"]];
     tmpImageView.frame = CGRectMake(kScreenWidth/2 - 36, kScreenHeight - 120, 72, 72);
     tmpImageView.userInteractionEnabled = YES;
     self.dialog = tmpImageView;
@@ -587,7 +596,18 @@
     tmpLabel.textAlignment = NSTextAlignmentCenter;
     tmpLabel.center = self.view.center;;
     [self.view addSubview:tmpLabel];
-
+    
+//    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
+//    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
+//    tmpButton.backgroundColor = [UIColor clearColor];
+//    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
+//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+//    [_dialog addSubview:tmpButton];
+//    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+//    tmpButton.showsTouchWhenHighlighted = YES;
+    
 }
 
 #pragma mark - voice search log
