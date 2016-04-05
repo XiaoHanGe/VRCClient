@@ -9,6 +9,7 @@
 // 语音搜索
 "StringVoiceRecognitonInit" = "正在初始化";
 "StringVoiceRecognitonPleaseSpeak" = "请说话";
+"StringVoiceStartSpeack" = "倾听中";
 "StringVoiceRecognitonIdentify" = "正在识别";
 "StringVoiceRecognitonSpeakAgain" = "重试";
 "StringVoiceRecognitonRecordFinish" = "完毕";

@@ -9,17 +9,34 @@
 // 头文件
 #import "BDVRCustomRecognitonViewController.h"
 #import "BDVRClientUIManager.h"
+#import "WBVoiceRecordHUD.h"
 #import "BDVRViewController.h"
 #import "BDVRSConfig.h"
 
-
+#define kScreenWidth [UIScreen mainScreen].bounds.size.width
+#define kScreenHeight [UIScreen mainScreen].bounds.size.height
 #define VOICE_LEVEL_INTERVAL 0.1 // 音量监听频率为1秒中10次
 
 // 私有方法分类
 @interface BDVRCustomRecognitonViewController ()
 {
     UIView *tmpView; // 背景大view
+    UILabel *tmpLabel;
+    
 }
+///录音的时候 显示录音时候的界面
+@property (nonatomic, strong) WBVoiceRecordHUD *voiceRecordHUD;
+
+@property (nonatomic, weak, readonly) UIButton *holdDownButton;// 说话按钮
+/**
+ *  是否正在说话
+ */
+@property (nonatomic, assign, readwrite) BOOL isRecording;
+
+/**
+ *  是否取消说话
+ */
+@property (nonatomic, assign, readwrite) BOOL isCancelled;
 
 - (void)createInitView; // 创建初始化界面，播放提示音时会用到
 - (void)createRecordView;  // 创建录音界面
@@ -89,23 +106,29 @@
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
-    
+    [self installReconginzing];
+}
+
+
+// 初始化识别相关
+- (void)installReconginzing
+{
     // 开始语音识别功能，之前必须实现MVoiceRecognitionClientDelegate协议中的VoiceRecognitionClientWorkStatus:obj方法
     int startStatus = -1;
-	startStatus = [[BDVoiceRecognitionClient sharedInstance] startVoiceRecognition:self];
-	if (startStatus != EVoiceRecognitionStartWorking) // 创建失败则报告错误
-	{
-		NSString *statusString = [NSString stringWithFormat:@"%d",startStatus];
-		[self performSelector:@selector(firstStartError:) withObject:statusString afterDelay:0.3];  // 延迟0.3秒，以便能在出错时正常删除view
+    startStatus = [[BDVoiceRecognitionClient sharedInstance] startVoiceRecognition:self];
+    if (startStatus != EVoiceRecognitionStartWorking) // 创建失败则报告错误
+    {
+        NSString *statusString = [NSString stringWithFormat:@"%d",startStatus];
+        [self performSelector:@selector(firstStartError:) withObject:statusString afterDelay:0.3];  // 延迟0.3秒，以便能在出错时正常删除view
         return;
-	}
+    }
     
     // 是否需要播放开始说话提示音，如果是，则提示用户不要说话，在播放完成后再开始说话, 也就是收到EVoiceRecognitionClientWorkStatusStartWorkIng通知后再开始说话。
     if ([BDVRSConfig sharedInstance].playStartMusicSwitch)
     {
         [self createInitView];
     }
-    else 
+    else
     {
         [self createRecordView];
     }
@@ -447,16 +470,14 @@
  
 
     UIImageView *tmpImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"client"]];
+    tmpImageView.frame = CGRectMake(kScreenWidth/2 - 36, kScreenHeight - 120, 72, 72);
     tmpImageView.userInteractionEnabled = YES;
-//    self.dialog = tmpImageView;
-//    _dialog.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
-    [self.view addSubview:tmpImageView];
-    
-//    tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"microphone.png"]];
-//    tmpImageView.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
-//    [_dialog addSubview:tmpImageView];
+    self.dialog = tmpImageView;
+    [self.view addSubview:_dialog];
    
-    UILabel *tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
+    
+   [tmpLabel removeFromSuperview];
+    tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
     tmpLabel.backgroundColor = [UIColor clearColor];
     tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
     tmpLabel.textColor = [UIColor blackColor];
@@ -465,38 +486,64 @@
     tmpLabel.center = self.view.center;
     [self.view addSubview:tmpLabel];
     
-    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
-    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
-    tmpButton.backgroundColor = [UIColor clearColor];
-    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
-    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-    [_dialog addSubview:tmpButton];
-    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
-    tmpButton.showsTouchWhenHighlighted = YES;
+//    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
+//    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
+//    tmpButton.backgroundColor = [UIColor clearColor];
+//    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
+//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+//    [_dialog addSubview:tmpButton];
+//    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+//    tmpButton.showsTouchWhenHighlighted = YES;
 }
 
 - (void)createRecordView
 {
-    if (_dialog && _dialog.superview) 
+    
+    if (!_holdDownButton) {
+        
+        UIButton *holdDownButton = [[UIButton alloc] initWithFrame:CGRectMake(kScreenWidth/2 - 50, kScreenHeight - 200, 100, 40)];
+
+        [holdDownButton setTitle:@"按住说话" forState:UIControlStateNormal];
+        [holdDownButton setTitle:@"放开发送" forState:UIControlStateHighlighted];
+        
+        
+        holdDownButton.backgroundColor = [UIColor whiteColor];
+        holdDownButton.layer.cornerRadius = 4;
+        holdDownButton.layer.borderColor = [UIColor greenColor].CGColor;
+        
+        [holdDownButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1] forState:UIControlStateNormal];
+        
+        
+        [holdDownButton addTarget:self action:@selector(holdDownButtonTouchDown) forControlEvents:UIControlEventTouchDown];
+        [holdDownButton addTarget:self action:@selector(holdDownButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
+        [holdDownButton addTarget:self action:@selector(holdDownButtonTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
+        [holdDownButton addTarget:self action:@selector(holdDownDragOutside) forControlEvents:UIControlEventTouchDragExit];
+        [holdDownButton addTarget:self action:@selector(holdDownDragInside) forControlEvents:UIControlEventTouchDragEnter];
+        
+        [self.view addSubview:holdDownButton];
+        _holdDownButton = holdDownButton;
+//        _holdDownButton.hidden = YES;
+    }
+
+    
+    
+    if (_dialog && _dialog.superview)
         [_dialog removeFromSuperview];
     
-    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"client"]];
-    tmpImageView.frame = CGRectMake(100, [UIScreen mainScreen].bounds.size.height - 82, 72, 72);
+    UIImageView *tmpImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"client"]];
+    tmpImageView.frame = CGRectMake(kScreenWidth/2 - 36, kScreenHeight - 120, 72, 72);
     tmpImageView.userInteractionEnabled = YES;
-    tmpImageView.backgroundColor = [UIColor whiteColor];
-//    tmpImageView.alpha = 0.6; /* He Liqiang, TAG-130729 */
     self.dialog = tmpImageView;
-    self.dialog.frame = tmpImageView.frame;
-    _dialog.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
     [self.view addSubview:_dialog];
     
-    tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"microphone.png"]];
-    tmpImageView.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
-    [_dialog addSubview:tmpImageView];
+//    tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"microphone.png"]];
+//    tmpImageView.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
+//    [self.view addSubview:tmpImageView];
     
-    UILabel *tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
+    [tmpLabel removeFromSuperview];
+    tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
     tmpLabel.backgroundColor = [UIColor clearColor];
     tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
     tmpLabel.textColor = [UIColor blackColor];
@@ -504,25 +551,16 @@
     tmpLabel.textAlignment = NSTextAlignmentCenter;
     tmpLabel.center = self.view.center;
     [self.view addSubview:tmpLabel];
+
     
-    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRLeftButtonFrame];
-    tmpButton.backgroundColor = [UIColor clearColor];
-    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
-    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-    [_dialog addSubview:tmpButton];
-    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
-    tmpButton.showsTouchWhenHighlighted = YES;
-    
-    tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRRightButtonFrame];
-    [tmpButton setTitle:NSLocalizedString(@"StringVoiceRecognitonRecordFinish", nil) forState:UIControlStateNormal];
-    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-    [_dialog addSubview:tmpButton];
-    [tmpButton addTarget:self action:@selector(finishRecord:) forControlEvents:UIControlEventTouchUpInside];
-    tmpButton.showsTouchWhenHighlighted = YES;
+//    tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRRightButtonFrame];
+//    [tmpButton setTitle:NSLocalizedString(@"StringVoiceRecognitonRecordFinish", nil) forState:UIControlStateNormal];
+//    tmpButton.titleLabel.textColor = [UIColor whiteColor];
+//    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+//    [_dialog addSubview:tmpButton];
+//    [tmpButton addTarget:self action:@selector(finishRecord:) forControlEvents:UIControlEventTouchUpInside];
+//    tmpButton.showsTouchWhenHighlighted = YES;
     
 }
 
@@ -530,20 +568,18 @@
 {
     if (_dialog && _dialog.superview) 
         [_dialog removeFromSuperview];
-    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"client"]];
-    tmpImageView.frame = CGRectMake(100, [UIScreen mainScreen].bounds.size.height - 82, 72, 72);
-//    UIImageView *tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"recognitionBackground.png"]];
-    
+    UIImageView *tmpImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"client"]];
+    tmpImageView.frame = CGRectMake(kScreenWidth/2 - 36, kScreenHeight - 120, 72, 72);
     tmpImageView.userInteractionEnabled = YES;
     self.dialog = tmpImageView;
-    _dialog.center = [[BDVRClientUIManager sharedInstance] VRRecordBackgroundCenter];
     [self.view addSubview:_dialog];
     
-    tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"recognitionIcon.png"]];
-	tmpImageView.center = [[BDVRClientUIManager sharedInstance] VRRecognizeBackgroundCenter];
-	[_dialog addSubview:tmpImageView];
+//    tmpImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"recognitionIcon.png"]];
+//	tmpImageView.center = [[BDVRClientUIManager sharedInstance] VRRecognizeBackgroundCenter];
+//	[_dialog addSubview:tmpImageView];
     
-    UILabel *tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecognizeTintWordFrame]];
+    [tmpLabel removeFromSuperview];
+    tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecognizeTintWordFrame]];
     tmpLabel.backgroundColor = [UIColor clearColor];
     tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
     tmpLabel.textColor = [UIColor blackColor];
@@ -551,18 +587,7 @@
     tmpLabel.textAlignment = NSTextAlignmentCenter;
     tmpLabel.center = self.view.center;;
     [self.view addSubview:tmpLabel];
-    
-    UIButton *tmpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    tmpButton.frame = [[BDVRClientUIManager sharedInstance] VRCenterButtonFrame];
-    tmpButton.center = [[BDVRClientUIManager sharedInstance] VRCenterButtonCenter];
-    tmpButton.backgroundColor = [UIColor clearColor];
-    [tmpButton setTitle:NSLocalizedString(@"StringCancel", nil) forState:UIControlStateNormal];
-    tmpButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-    tmpButton.titleLabel.textColor = [UIColor whiteColor];
-    [_dialog addSubview:tmpButton];
-    [tmpButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
-    tmpButton.showsTouchWhenHighlighted = YES;
-    
+
 }
 
 #pragma mark - voice search log
@@ -585,6 +610,7 @@
 		case EVoiceRecognitionClientWorkPlayStartToneFinish: //播放开始提示音完成
 		{
 			statusMsg = NSLocalizedString(@"StringLogStatusPlayStartToneFinish", nil);
+           
 			break;
 		}
 		case EVoiceRecognitionClientWorkStatusStartWorkIng: //识别工作开始，开始采集及处理数据
@@ -595,6 +621,15 @@
 		case EVoiceRecognitionClientWorkStatusStart: //检测到用户开始说话
 		{
 			statusMsg = NSLocalizedString(@"StringLogStatusStart", nil);
+            [tmpLabel removeFromSuperview];
+            tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
+            tmpLabel.backgroundColor = [UIColor clearColor];
+            tmpLabel.font = [UIFont boldSystemFontOfSize:28.0f];
+            tmpLabel.textColor = [UIColor blackColor];
+            tmpLabel.text = NSLocalizedString(@"StringVoiceStartSpeack", nil);
+            tmpLabel.textAlignment = NSTextAlignmentCenter;
+            tmpLabel.center = self.view.center;
+            [self.view addSubview:tmpLabel];
 			break;
 		}
 		case EVoiceRecognitionClientWorkPlayEndTone: //播放结束提示音 
@@ -702,4 +737,70 @@
     
 }
 
+#pragma mark ------ 关于按钮操作的一些事情-------
+// 录制语音按钮
+- (void)holdDownButtonTouchDown {
+    
+    self.isCancelled = NO;
+    self.isRecording = NO;
+
+        if (!self.isCancelled) {
+            self.isRecording = YES;
+            
+        }else
+        {
+  
+        }
+    
+}
+- (void)holdDownButtonTouchUpOutside {
+    
+    //如果已經開始錄音了, 才需要做取消的動作, 否則只要切換 isCancelled, 不讓錄音開始.
+    
+    if (self.isRecording) {
+        
+        self.voiceRecordHUD = nil;
+    
+    }else {
+        self.isCancelled = YES;
+    }
+}
+
+- (void)holdDownButtonTouchUpInside {
+    
+    //如果已經開始錄音了, 才需要做結束的動作, 否則只要切換 isCancelled, 不讓錄音開始.
+    if (self.isRecording) {
+        if ([BDVRSConfig sharedInstance].voiceLevelMeter)  // 开启语音音量监听
+        {
+//            [self startVoiceLevelMeterTimer];
+        }
+        [_voiceRecordHUD startRecordingHUDAtView:self.view];
+//        self.voiceRecordHUD = nil;
+
+    }else{
+        self.isCancelled = YES;
+    }
+}
+
+- (void)holdDownDragOutside {
+    
+    //如果已經開始錄音了, 才需要做拖曳出去的動作, 否則只要切換 isCancelled, 不讓錄音開始.
+    if (self.isRecording) {
+        [self.voiceRecordHUD resaueRecord];
+    self.holdDownButton.backgroundColor = [UIColor whiteColor];
+    }else {
+        self.isCancelled = YES;
+    }
+}
+
+- (void)holdDownDragInside {
+    
+    //如果已經開始錄音了, 才需要做拖曳回來的動作, 否則只要切換 isCancelled, 不讓錄音開始.
+    if (self.isRecording) {
+        [self.voiceRecordHUD pauseRecord];
+    }else {
+        self.isCancelled = YES;
+    }
+    
+}
 @end // BDVRCustomRecognitonViewController
