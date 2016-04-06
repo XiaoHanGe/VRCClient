@@ -28,6 +28,7 @@
 {
     UIView *tmpView; // 背景大view
     UILabel *tmpLabel;
+    UIImageView *voiceImageStr; //按住提示
     
 }
 // 录音按钮相关
@@ -517,8 +518,6 @@
     [button setBackgroundImage:[UIImage imageNamed:@"client"] forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"Oval"] forState:UIControlStateHighlighted];
     [button setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [button setTitle:@"按住说话" forState:UIControlStateNormal];
-    [button setTitle:@"松开识别"  forState:UIControlStateHighlighted];
     
     [button addTarget:self action:@selector(holdDownButtonTouchDown) forControlEvents:UIControlEventTouchDown];
     [button addTarget:self action:@selector(holdDownButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
@@ -527,8 +526,12 @@
     [button addTarget:self action:@selector(holdDownDragInside) forControlEvents:UIControlEventTouchDragEnter];
     _holdDownButton = button;
     [self.view addSubview:_holdDownButton];
-
-   
+    
+    // 按住说话提示
+    [voiceImageStr removeFromSuperview];
+    voiceImageStr = [[UIImageView alloc]initWithFrame:CGRectMake(kScreenWidth/2 - 40, kScreenHeight - 153, 80, 33)];
+    voiceImageStr.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"speck"]];
+    [self.view addSubview:voiceImageStr];
     
    [tmpLabel removeFromSuperview];
     tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
@@ -544,6 +547,7 @@
 
 - (void)createRecordView
 {
+   
     if (_holdDownButton && _holdDownButton.superview)
         [_holdDownButton removeFromSuperview];
     
@@ -551,8 +555,6 @@
     [button setBackgroundImage:[UIImage imageNamed:@"client"] forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"Oval"] forState:UIControlStateHighlighted];
     [button setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [button setTitle:@"按住说话" forState:UIControlStateNormal];
-    [button setTitle:@"松开识别"  forState:UIControlStateHighlighted];
     
     [button addTarget:self action:@selector(holdDownButtonTouchDown) forControlEvents:UIControlEventTouchDown];
     [button addTarget:self action:@selector(holdDownButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
@@ -561,6 +563,12 @@
     [button addTarget:self action:@selector(holdDownDragInside) forControlEvents:UIControlEventTouchDragEnter];
     _holdDownButton = button;
     [self.view addSubview:_holdDownButton];
+    
+    // 按住说话提示
+    [voiceImageStr removeFromSuperview];
+    voiceImageStr = [[UIImageView alloc]initWithFrame:CGRectMake(kScreenWidth/2 - 40, kScreenHeight - 153, 80, 33)];
+    voiceImageStr.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"speck"]];
+    [self.view addSubview:voiceImageStr];
     
     [tmpLabel removeFromSuperview];
     tmpLabel = [[UILabel alloc] initWithFrame:[[BDVRClientUIManager sharedInstance] VRRecordTintWordFrame]];
@@ -576,6 +584,8 @@
 
 - (void)createRecognitionView
 {
+    // 移除提示
+    [voiceImageStr removeFromSuperview];
     if (_holdDownButton && _holdDownButton.superview)
         [_holdDownButton removeFromSuperview];
     
@@ -583,8 +593,6 @@
     [button setBackgroundImage:[UIImage imageNamed:@"client"] forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"Oval"] forState:UIControlStateHighlighted];
     [button setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [button setTitle:@"按住说话" forState:UIControlStateNormal];
-    [button setTitle:@"松开识别"  forState:UIControlStateHighlighted];
     
     [button addTarget:self action:@selector(holdDownButtonTouchDown) forControlEvents:UIControlEventTouchDown];
     [button addTarget:self action:@selector(holdDownButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
@@ -601,7 +609,7 @@
     tmpLabel.textColor = [UIColor blackColor];
     tmpLabel.text = NSLocalizedString(@"StringVoiceRecognitonIdentify", nil);
     tmpLabel.textAlignment = NSTextAlignmentCenter;
-    tmpLabel.center = self.view.center;;
+    tmpLabel.center = self.view.center;
     [self.view addSubview:tmpLabel];
     
 }
@@ -768,7 +776,12 @@
         [self performSelector:@selector(firstStartError:) withObject:statusString afterDelay:0.3];  // 延迟0.3秒，以便能在出错时正常删除view
         return;
     }
-    
+    [voiceImageStr removeFromSuperview];
+    // 按住说话提示
+    voiceImageStr = [[UIImageView alloc]initWithFrame:CGRectMake(kScreenWidth/2 - 40, kScreenHeight - 153, 80, 33)];
+    voiceImageStr.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"searchVoice"]];
+    [self.view addSubview:voiceImageStr];
+   
 }
 
 - (void)holdDownButtonTouchUpOutside {
