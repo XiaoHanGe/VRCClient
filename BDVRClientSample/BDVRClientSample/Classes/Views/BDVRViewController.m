@@ -13,8 +13,6 @@
 #import "BDVRCustomRecognitonViewController.h"
 #import "BDVRUIPromptTextCustom.h"
 
-
-#import "MyView.h"
 #import "MyViewController.h"
 //#error 请修改为您在百度开发者平台申请的API_KEY和SECRET_KEY
 #define API_KEY @"f3frh9kQcz8zNdRYGViYveri" // 请修改为您在百度开发者平台申请的API_KEY
@@ -29,11 +27,7 @@
     CADisplayLink *_disPlayLink;
     
 }
-@property (nonatomic,retain) UIView *imgView;
-@property(nonatomic,strong) CALayer *staticLayer;
-@property(nonatomic,strong) CAGradientLayer *staticShadowLayer;
-@property (nonatomic) double getAddressTime;
-@property(nonatomic,strong)NSTimer *timer ;
+
 @end
 
 @implementation BDVRViewController
@@ -42,12 +36,6 @@
 {
     [super viewDidLoad];
     
-#pragma mark ---- 动画部分
-//    self.imgView = [[MyView alloc]init];
-//    self.imgView.backgroundColor = [UIColor clearColor];
-//    self.imgView.frame=self.view.frame;
-//    [self.view addSubview:self.imgView];
-//    [self startAnimation];
 }
 
 - (void)didReceiveMemoryWarning
@@ -517,6 +505,11 @@
 - (void)logOutToContinusManualResut:(NSString *)aResult
 {
     _resultView.text = aResult;
+    if (_resultView.text.length >0) {
+        MyViewController *myVC = [[MyViewController alloc]init];
+        myVC.string = _resultView.text;
+        [self presentViewController:myVC animated:YES completion:nil];
+    }
 }
 
 - (void)logOutToManualResut:(NSString *)aResult
@@ -530,11 +523,14 @@
     else
     {
         _resultView.text = [_resultView.text stringByAppendingString:aResult];
-        // 传值
+    }
+    
+    if (_resultView.text.length >0) {
         MyViewController *myVC = [[MyViewController alloc]init];
         myVC.string = tmpString;
-        [self presentModalViewController:myVC animated:YES];
+        [self presentViewController:myVC animated:YES completion:nil];
     }
+  
 }
 
 - (void)logOutToLogView:(NSString *)aLog
@@ -550,194 +546,4 @@
         _logCatView.text = [_logCatView.text stringByAppendingFormat:@"\r\n%@", aLog];
     }
 }
-
-
-
-
-#pragma mark ---- 动画部分
-/*
-@synthesize imgView;
-#pragma mark 懒加载
--(CALayer *)staticLayer{
-    if (!_staticLayer) {
-        self.staticLayer = [[CALayer alloc] init];
-        self.staticLayer.cornerRadius = [UIScreen mainScreen].bounds.size.width/4;
-        self.staticLayer.frame = CGRectMake(0, 0, self.staticLayer.cornerRadius*2 , self.staticLayer.cornerRadius*2);
-        self.staticLayer.borderWidth = 1;
-        self.staticLayer.position = CGPointMake([[UIScreen mainScreen]bounds].size.width/2, [[UIScreen mainScreen]bounds].size.height/2);
-        
-        UIColor *color = [UIColor redColor];
-        
-        self.staticLayer.borderColor =color.CGColor;
-        
-    }
-    return _staticLayer;
-}
-
--(CAGradientLayer *)staticShadowLayer{
-    if (!_staticShadowLayer) {
-        self.staticShadowLayer = [[CAGradientLayer alloc] init];
-        self.staticShadowLayer.cornerRadius = [UIScreen mainScreen].bounds.size.width/4;
-        self.staticShadowLayer.frame = CGRectMake(0, 0, self.staticLayer.cornerRadius*2-1 , self.staticLayer.cornerRadius*2-1);
-        //    layer1.borderWidth = 18;
-        self.staticShadowLayer.position = CGPointMake([[UIScreen mainScreen]bounds].size.width/2, [[UIScreen mainScreen]bounds].size.height/2);
-        UIColor* backColor = [UIColor colorWithRed:100/255.0 green:46/255.0 blue:97/255.0 alpha:0.8];
-        self.staticShadowLayer.colors = [NSArray arrayWithObjects:(id)backColor.CGColor,[UIColor colorWithRed:59/255.0 green:46/255.0 blue:97/255.0 alpha:0.8].CGColor ,nil];
-        
-    }
-    return _staticShadowLayer;
-}
-#pragma mark 动画
-//开始动画
-- (void)startAnimation
-{
-    [self.view.layer addSublayer:self.staticLayer];
-    [self.view.layer addSublayer:self.staticShadowLayer];
-    
-    CAMediaTimingFunction *defaultCurve = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault];
-    
-    _animaTionGroup = [CAAnimationGroup animation];
-    _animaTionGroup.delegate = self;
-    _animaTionGroup.duration = 1;
-    _animaTionGroup.removedOnCompletion = YES;
-    _animaTionGroup.timingFunction = defaultCurve;
-    
-    _animaTionGroup.autoreverses = YES;
-    _animaTionGroup.repeatCount = MAXFLOAT;
-    
-    CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.xy"];
-    scaleAnimation.fromValue = @0.7;
-    scaleAnimation.toValue = @0.8;
-    scaleAnimation.duration = 1;
-    scaleAnimation.repeatCount = MAXFLOAT;
-    scaleAnimation.autoreverses = YES;
-    
-    CAKeyframeAnimation *opencityAnimation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
-    opencityAnimation.duration = 1;
-    opencityAnimation.values = @[@0.6,@0.2,@0.2];
-    opencityAnimation.keyTimes = @[@0,@0.5,@1];
-    opencityAnimation.removedOnCompletion = YES;
-    opencityAnimation.autoreverses = YES;
-    opencityAnimation.repeatCount = MAXFLOAT;
-    
-    NSArray *animations = @[scaleAnimation];
-    
-    _animaTionGroup.animations = animations;
-    [self.staticLayer addAnimation:_animaTionGroup forKey:@"groupAnnimation"];
-    [self.staticShadowLayer addAnimation:_animaTionGroup forKey:@"groupAnnimation"];
-    
-    
-    [self.view bringSubviewToFront:self.imgView];
-}
-
-//点击事件的动画
--(void)click{
-    
-    self.getAddressTime = [[NSDate date] timeIntervalSince1970];
-    
-    
-    CALayer *layer = [[CALayer alloc] init];
-    layer.cornerRadius = [UIScreen mainScreen].bounds.size.width;
-    layer.frame = CGRectMake(0, 0, layer.cornerRadius*2 , layer.cornerRadius*2);
-    layer.borderWidth = 1;
-    layer.position = CGPointMake([[UIScreen mainScreen]bounds].size.width/2, [[UIScreen mainScreen]bounds].size.height/2);
-    
-    UIColor *color = [UIColor redColor];
-    
-    UIColor *backColor = [UIColor colorWithRed:59/255.0 green:46/255.0 blue:97/255.0 alpha:0.5];
-    layer.borderColor =color.CGColor;
-    [self.view.layer addSublayer:layer];
-    
-    
-    CAGradientLayer *layer1 = [[CAGradientLayer alloc] init];
-    layer1.cornerRadius = [UIScreen mainScreen].bounds.size.width;
-    layer1.frame = CGRectMake(0, 0, layer.cornerRadius*2-1 , layer.cornerRadius*2-1);
-    layer1.position = CGPointMake([[UIScreen mainScreen]bounds].size.width/2, [[UIScreen mainScreen]bounds].size.height/2);
-    backColor = [UIColor colorWithRed:100/255.0 green:46/255.0 blue:97/255.0 alpha:0.8];
-    layer1.colors = [NSArray arrayWithObjects:(id)backColor.CGColor,[UIColor colorWithRed:59/255.0 green:46/255.0 blue:97/255.0 alpha:0.8].CGColor ,nil];
-    
-    [self.view.layer addSublayer:layer1];
-    
-    CAMediaTimingFunction *defaultCurve = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault];
-    
-    _animaTionGroup = [CAAnimationGroup animation];
-    _animaTionGroup.delegate = self;
-    _animaTionGroup.duration = 2;
-    _animaTionGroup.removedOnCompletion = YES;
-    _animaTionGroup.timingFunction = defaultCurve;
-    
-    
-    
-    CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.xy"];
-    scaleAnimation.fromValue = @0.15;
-    scaleAnimation.toValue = @1;
-    scaleAnimation.duration = 2;
-    
-    
-    CAKeyframeAnimation *opencityAnimation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
-    opencityAnimation.duration = 2;
-    opencityAnimation.values = @[@0.6,@0.2,@0.2];
-    opencityAnimation.keyTimes = @[@0,@0.5,@1];
-    opencityAnimation.removedOnCompletion = YES;
-    
-    
-    NSArray *animations = @[scaleAnimation];
-    
-    _animaTionGroup.animations = animations;
-    [layer addAnimation:_animaTionGroup forKey:@"groupAnnimation"];
-    [layer1 addAnimation:_animaTionGroup forKey:@"groupAnnimation"];
-    
-    [self performSelector:@selector(removeLayer:) withObject:layer afterDelay:2];
-    [self performSelector:@selector(removeLayer:) withObject:layer1 afterDelay:2];
-    
-    [self.view bringSubviewToFront:self.imgView];
-}
-
-
-- (void)removeLayer:(CALayer *)layer
-{
-    [layer removeFromSuperlayer];
-    [layer removeAnimationForKey:@"groupAnnimation"];
-    
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(action) userInfo:nil repeats:NO];
-    
-}
-
-//点击事件结束2秒后开始执行startAnimation
--(void)action{
-    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];;
-    if (currentTime-self.getAddressTime>2) {
-        [self startAnimation];
-        [self.timer invalidate];
-        self.timer = nil;
-    }else{
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(action) userInfo:nil repeats:NO];
-    }
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    
-    [self.staticShadowLayer removeFromSuperlayer];
-    [self.staticShadowLayer removeAnimationForKey:@"groupAnnimation"];
-    [self.staticLayer removeFromSuperlayer];
-    [self.staticLayer removeAnimationForKey:@"groupAnnimation"];
-    
-    _disPlayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(click)];
-    _disPlayLink.frameInterval = 40;
-    [_disPlayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-}
-
-- (void)delayAnimation
-{
-    [self startAnimation];
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [self.view.layer removeAllAnimations];
-    [_disPlayLink invalidate];
-    _disPlayLink = nil;
-}
-*/
 @end

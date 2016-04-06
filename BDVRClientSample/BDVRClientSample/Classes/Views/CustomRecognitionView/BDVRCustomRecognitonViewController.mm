@@ -29,6 +29,10 @@
     UIView *tmpView; // 背景大view
     UILabel *tmpLabel;
     UIImageView *voiceImageStr; //按住提示
+    // 动画相关实例
+    CALayer *_layer;
+    CAAnimationGroup *_animaTionGroup;
+    CADisplayLink *_disPlayLink;
     
 }
 // 录音按钮相关
@@ -227,10 +231,11 @@
         case EVoiceRecognitionClientWorkStatusFlushData: // 连续上屏中间结果
         {
             NSString *text = [aObj objectAtIndex:0];
-                        
+            
             if ([text length] > 0)
             {
-                [clientSampleViewController logOutToContinusManualResut:text];
+//                [clientSampleViewController logOutToContinusManualResut:text];
+                
                 UILabel *clientWorkStatusFlushLabel = [[UILabel alloc]initWithFrame:CGRectMake(kScreenWidth/2 - 100,64,200,60)];
                 clientWorkStatusFlushLabel.text = text;
                 clientWorkStatusFlushLabel.textAlignment = NSTextAlignmentCenter;
@@ -238,6 +243,7 @@
                 clientWorkStatusFlushLabel.numberOfLines = 0;
                 clientWorkStatusFlushLabel.backgroundColor = [UIColor whiteColor];
                 [self.view addSubview:clientWorkStatusFlushLabel];
+                
             }
 
             break;
@@ -260,15 +266,15 @@
                 
                 clientSampleViewController.resultView.text = nil;
                 [clientSampleViewController logOutToManualResut:tmpString];
-
+                
             }
             else
             {
                 NSString *tmpString = [[BDVRSConfig sharedInstance] composeInputModeResult:aObj];
                 [clientSampleViewController logOutToContinusManualResut:tmpString];
-       
+                
             }
-            
+           
             if (self.view.superview)
             {
                 [self.view removeFromSuperview];
@@ -295,9 +301,9 @@
             //         }
             //      ],
             //   ]
-            
-            NSString *tmpString = [[BDVRSConfig sharedInstance] composeInputModeResult:aObj];
-            [clientSampleViewController logOutToContinusManualResut:tmpString];
+//暂时关掉
+//            NSString *tmpString = [[BDVRSConfig sharedInstance] composeInputModeResult:aObj];
+//            [clientSampleViewController logOutToContinusManualResut:tmpString];
             
             break;
         }
@@ -510,8 +516,8 @@
             break;
         }
     }
-    
-    [clientSampleViewController logOutToManualResut:errorMsg];
+    // 不让显示错误❌的结果
+//    [clientSampleViewController logOutToManualResut:errorMsg];
 }
 
 #pragma mark - voice search views
@@ -715,18 +721,18 @@
 		}
 	}
 	
-	if (statusMsg)
-	{
-		NSString *logString = self.clientSampleViewController.logCatView.text;
-		if (logString && [logString isEqualToString:@""] == NO)
-		{
-			self.clientSampleViewController.logCatView.text = [logString stringByAppendingFormat:@"\r\n%@", statusMsg];
-		}
-		else 
-		{
-			self.clientSampleViewController.logCatView.text = statusMsg;
-		}
-	}
+//	if (statusMsg)
+//	{
+//		NSString *logString = self.clientSampleViewController.logCatView.text;
+//		if (logString && [logString isEqualToString:@""] == NO)
+//		{
+//			self.clientSampleViewController.logCatView.text = [logString stringByAppendingFormat:@"\r\n%@", statusMsg];
+//		}
+//		else 
+//		{
+//			self.clientSampleViewController.logCatView.text = statusMsg;
+//		}
+//	}
 }
 
 #pragma mark - VoiceLevelMeterTimer methods
@@ -770,6 +776,11 @@
 
 #pragma mark ------ 关于按钮操作的一些事情-------
 - (void)holdDownButtonTouchDown {
+    // 开始动画
+    _disPlayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(delayAnimation)];
+    _disPlayLink.frameInterval = 40;
+    [_disPlayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    
     self.isCancelled = NO;
     self.isRecording = NO;
     
@@ -782,8 +793,9 @@
         [self performSelector:@selector(firstStartError:) withObject:statusString afterDelay:0.3];  // 延迟0.3秒，以便能在出错时正常删除view
         return;
     }
-    [voiceImageStr removeFromSuperview];
+    
     // 按住说话提示
+    [voiceImageStr removeFromSuperview];
     voiceImageStr = [[UIImageView alloc]initWithFrame:CGRectMake(kScreenWidth/2 - 40, kScreenHeight - 153, 80, 33)];
     voiceImageStr.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"searchVoice"]];
     [self.view addSubview:voiceImageStr];
@@ -791,6 +803,11 @@
 }
 
 - (void)holdDownButtonTouchUpOutside {
+    // 结束动画
+    [self.view.layer removeAllAnimations];
+    [_disPlayLink invalidate];
+    _disPlayLink = nil;
+    
     // 取消录音
     [[BDVoiceRecognitionClient sharedInstance] stopVoiceRecognition];
     
@@ -801,6 +818,10 @@
 }
 
 - (void)holdDownButtonTouchUpInside {
+    // 结束动画
+    [self.view.layer removeAllAnimations];
+    [_disPlayLink invalidate];
+    _disPlayLink = nil;
     
     [[BDVoiceRecognitionClient sharedInstance] speakFinish];
 //    //如果已經開始錄音了, 才需要做結束的動作, 否則只要切換 isCancelled, 不讓錄音開始.
@@ -849,6 +870,70 @@
     
     return button;
 }
+
+#pragma mark ----------- 动画部分-----------
+- (void)startAnimation
+{
+    CALayer *layer = [[CALayer alloc] init];
+    layer.cornerRadius = [UIScreen mainScreen].bounds.size.width/2;
+    layer.frame = CGRectMake(0, 0, layer.cornerRadius * 2, layer.cornerRadius * 2);
+    layer.position = CGPointMake([UIScreen mainScreen].bounds.size.width/2,[UIScreen mainScreen].bounds.size.height - 84);
+    //    self.view.layer.position;
+    UIColor *color = [UIColor colorWithRed:arc4random()%10*0.1 green:arc4random()%10*0.1 blue:arc4random()%10*0.1 alpha:1];
+    layer.backgroundColor = color.CGColor;
+    [self.view.layer addSublayer:layer];
+    
+    CAMediaTimingFunction *defaultCurve = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault];
+    
+    _animaTionGroup = [CAAnimationGroup animation];
+    _animaTionGroup.delegate = self;
+    _animaTionGroup.duration = 2;
+    _animaTionGroup.removedOnCompletion = YES;
+    _animaTionGroup.timingFunction = defaultCurve;
+    
+    CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.xy"];
+    scaleAnimation.fromValue = @0.0;
+    scaleAnimation.toValue = @1.0;
+    scaleAnimation.duration = 2;
+    
+    CAKeyframeAnimation *opencityAnimation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+    opencityAnimation.duration = 2;
+    opencityAnimation.values = @[@0.8,@0.4,@0];
+    opencityAnimation.keyTimes = @[@0,@0.5,@1];
+    opencityAnimation.removedOnCompletion = YES;
+    
+    NSArray *animations = @[scaleAnimation,opencityAnimation];
+    _animaTionGroup.animations = animations;
+    [layer addAnimation:_animaTionGroup forKey:nil];
+    
+    [self performSelector:@selector(removeLayer:) withObject:layer afterDelay:1.5];
+}
+
+- (void)removeLayer:(CALayer *)layer
+{
+    [layer removeFromSuperlayer];
+}
+
+//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+//{
+//    _disPlayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(delayAnimation)];
+//    _disPlayLink.frameInterval = 40;
+//    [_disPlayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+//}
+
+- (void)delayAnimation
+{
+    [self startAnimation];
+}
+
+//- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+//{
+//    [self.view.layer removeAllAnimations];
+//    [_disPlayLink invalidate];
+//    _disPlayLink = nil;
+//}
+
+
 
 
 @end // BDVRCustomRecognitonViewController
