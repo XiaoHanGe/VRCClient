@@ -7,8 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11569C661CB3B809007ED182 /* WBVoiceRecordHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 11569C651CB3B809007ED182 /* WBVoiceRecordHUD.m */; };
+		1161CC5A1CB49D03004BD564 /* VoiceBtn_Black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1161CC581CB49D03004BD564 /* VoiceBtn_Black@2x.png */; };
+		1161CC5B1CB49D03004BD564 /* VoiceBtn_BlackHL@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1161CC591CB49D03004BD564 /* VoiceBtn_BlackHL@2x.png */; };
+		1161CC5F1CB4A86B004BD564 /* Oval.png in Resources */ = {isa = PBXBuildFile; fileRef = 1161CC5E1CB4A86B004BD564 /* Oval.png */; };
+		1161CC621CB4AECD004BD564 /* speck.png in Resources */ = {isa = PBXBuildFile; fileRef = 1161CC601CB4AECD004BD564 /* speck.png */; };
+		1161CC631CB4AECD004BD564 /* searchVoice.png in Resources */ = {isa = PBXBuildFile; fileRef = 1161CC611CB4AECD004BD564 /* searchVoice.png */; };
 		11C592B91CACC2970068B363 /* MyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C592B81CACC2970068B363 /* MyViewController.m */; };
-		11E7D4CE1CAE01B20037899F /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 11E7D4CD1CAE01B20037899F /* 1.png */; };
+		11E7D4DC1CAE54FB0037899F /* client.png in Resources */ = {isa = PBXBuildFile; fileRef = 11E7D4DB1CAE54FA0037899F /* client.png */; };
+		11E7D4DE1CAE55700037899F /* cancleButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 11E7D4DD1CAE55700037899F /* cancleButton.png */; };
 		11FBA69C1CABFFA900F33A38 /* MyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11FBA69B1CABFFA900F33A38 /* MyView.m */; };
 		181DA9E21B0CC91100584174 /* s_1 in Resources */ = {isa = PBXBuildFile; fileRef = 181DA9DD1B0CC91100584174 /* s_1 */; };
 		181DA9E31B0CC91100584174 /* s_2_InputMethod in Resources */ = {isa = PBXBuildFile; fileRef = 181DA9DE1B0CC91100584174 /* s_2_InputMethod */; };
@@ -77,9 +84,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		11569C641CB3B809007ED182 /* WBVoiceRecordHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBVoiceRecordHUD.h; sourceTree = "<group>"; };
+		11569C651CB3B809007ED182 /* WBVoiceRecordHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBVoiceRecordHUD.m; sourceTree = "<group>"; };
+		1161CC581CB49D03004BD564 /* VoiceBtn_Black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VoiceBtn_Black@2x.png"; sourceTree = "<group>"; };
+		1161CC591CB49D03004BD564 /* VoiceBtn_BlackHL@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VoiceBtn_BlackHL@2x.png"; sourceTree = "<group>"; };
+		1161CC5E1CB4A86B004BD564 /* Oval.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Oval.png; sourceTree = "<group>"; };
+		1161CC601CB4AECD004BD564 /* speck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = speck.png; sourceTree = "<group>"; };
+		1161CC611CB4AECD004BD564 /* searchVoice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = searchVoice.png; sourceTree = "<group>"; };
 		11C592B71CACC2970068B363 /* MyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyViewController.h; sourceTree = "<group>"; };
 		11C592B81CACC2970068B363 /* MyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyViewController.m; sourceTree = "<group>"; };
-		11E7D4CD1CAE01B20037899F /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
+		11E7D4DB1CAE54FA0037899F /* client.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = client.png; sourceTree = "<group>"; };
+		11E7D4DD1CAE55700037899F /* cancleButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancleButton.png; sourceTree = "<group>"; };
 		11FBA69A1CABFFA900F33A38 /* MyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyView.h; sourceTree = "<group>"; };
 		11FBA69B1CABFFA900F33A38 /* MyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyView.m; sourceTree = "<group>"; };
 		1813506F181EC65B0093ECDA /* BDVRConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDVRConstants.h; sourceTree = "<group>"; };
@@ -408,7 +423,15 @@
 				83E227DF17F4222A0049A216 /* BDVRCustomRecognitonViewController.mm */,
 				83E227E017F4222A0049A216 /* BDVRClientUIManager.h */,
 				83E227E117F4222A0049A216 /* BDVRClientUIManager.m */,
-				11E7D4CD1CAE01B20037899F /* 1.png */,
+				11569C641CB3B809007ED182 /* WBVoiceRecordHUD.h */,
+				11569C651CB3B809007ED182 /* WBVoiceRecordHUD.m */,
+				11E7D4DD1CAE55700037899F /* cancleButton.png */,
+				11E7D4DB1CAE54FA0037899F /* client.png */,
+				1161CC5E1CB4A86B004BD564 /* Oval.png */,
+				1161CC601CB4AECD004BD564 /* speck.png */,
+				1161CC611CB4AECD004BD564 /* searchVoice.png */,
+				1161CC581CB49D03004BD564 /* VoiceBtn_Black@2x.png */,
+				1161CC591CB49D03004BD564 /* VoiceBtn_BlackHL@2x.png */,
 			);
 			path = CustomRecognitionView;
 			sourceTree = "<group>";
@@ -501,11 +524,13 @@
 				832D570417F1621E00D3FD82 /* InfoPlist.strings in Resources */,
 				832D570C17F1621E00D3FD82 /* Default.png in Resources */,
 				181DA9E21B0CC91100584174 /* s_1 in Resources */,
+				11E7D4DE1CAE55700037899F /* cancleButton.png in Resources */,
 				832D570E17F1621E00D3FD82 /* Default@2x.png in Resources */,
 				181DA9E51B0CC91100584174 /* bdasr_temp_license.dat in Resources */,
 				832D571017F1621E00D3FD82 /* Default-568h@2x.png in Resources */,
 				832D571617F1621E00D3FD82 /* BDVRViewController.xib in Resources */,
 				832D576D17F16B3700D3FD82 /* Localizable.strings in Resources */,
+				11E7D4DC1CAE54FB0037899F /* client.png in Resources */,
 				83E227CB17F419E50049A216 /* bdvrclosed.png in Resources */,
 				83E227CC17F419E50049A216 /* bdvrclosed@2x.png in Resources */,
 				83E227CD17F419E50049A216 /* bdvrclosed_highlight.png in Resources */,
@@ -517,12 +542,17 @@
 				83E227D217F419E50049A216 /* bdvrleftbutton_highlight.png in Resources */,
 				83E227D317F419E50049A216 /* bdvrleftbutton_highlight@2x.png in Resources */,
 				83E227D417F419E50049A216 /* bdvrrightbtn.png in Resources */,
+				1161CC5A1CB49D03004BD564 /* VoiceBtn_Black@2x.png in Resources */,
+				1161CC621CB4AECD004BD564 /* speck.png in Resources */,
+				1161CC5B1CB49D03004BD564 /* VoiceBtn_BlackHL@2x.png in Resources */,
 				83E227D517F419E50049A216 /* bdvrrightbtn@2x.png in Resources */,
 				83E227D617F419E50049A216 /* bdvrrightbtn_highlight.png in Resources */,
 				83E227D717F419E50049A216 /* bdvrrightbtn_highlight@2x.png in Resources */,
 				83E227D817F419E50049A216 /* bdvrwholebtb@2x.png in Resources */,
 				187E9A30183B088700FE4140 /* example_localRecord.pcm in Resources */,
 				83E227D917F419E50049A216 /* bdvrwholebtn_highlight.png in Resources */,
+				1161CC5F1CB4A86B004BD564 /* Oval.png in Resources */,
+				1161CC631CB4AECD004BD564 /* searchVoice.png in Resources */,
 				83E227DA17F419E50049A216 /* bdvrwholebtn_highlight@2x.png in Resources */,
 				83E227EC17F428880049A216 /* microphone@2x.png in Resources */,
 				83E227ED17F428880049A216 /* recognitionBackground@2x.png in Resources */,
@@ -534,7 +564,6 @@
 				83E227F517F42BC10049A216 /* recognitionBackground.png in Resources */,
 				83E227F617F42BC10049A216 /* recognitionIcon.png in Resources */,
 				83E227F717F42BC10049A216 /* recordBackground1.png in Resources */,
-				11E7D4CE1CAE01B20037899F /* 1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +581,7 @@
 				832D572717F165F100D3FD82 /* BDVRViewController.m in Sources */,
 				832D572A17F166FE00D3FD82 /* BDVRSConfig.m in Sources */,
 				11C592B91CACC2970068B363 /* MyViewController.m in Sources */,
+				11569C661CB3B809007ED182 /* WBVoiceRecordHUD.m in Sources */,
 				83E227E417F4222A0049A216 /* BDVRCustomRecognitonViewController.mm in Sources */,
 				11FBA69C1CABFFA900F33A38 /* MyView.m in Sources */,
 				83E227E517F4222A0049A216 /* BDVRClientUIManager.m in Sources */,

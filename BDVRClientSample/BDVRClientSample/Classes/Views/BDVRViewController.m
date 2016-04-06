@@ -226,7 +226,6 @@
     } else if ([[BDVRSConfig sharedInstance].recognitionProperty intValue] == EVoiceRecognitionPropertyInput) {
         self.rawDataRecognizer.LMDatFilePath = [[NSBundle mainBundle] pathForResource:@"s_2_InputMethod" ofType:@""];
     }
-    
     self.rawDataRecognizer.recogGrammSlot = @{@"$name_CORE" : @"李四\n张三\n",
                                               @"$song_CORE" : @"小苹果\n我的滑板鞋\n",
                                               @"$app_CORE" : @"百度\n百度地图\n",

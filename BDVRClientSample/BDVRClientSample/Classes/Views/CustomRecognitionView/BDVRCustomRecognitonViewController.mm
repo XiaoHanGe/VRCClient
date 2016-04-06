@@ -231,6 +231,13 @@
             if ([text length] > 0)
             {
                 [clientSampleViewController logOutToContinusManualResut:text];
+                UILabel *clientWorkStatusFlushLabel = [[UILabel alloc]initWithFrame:CGRectMake(kScreenWidth/2 - 100,64,200,60)];
+                clientWorkStatusFlushLabel.text = text;
+                clientWorkStatusFlushLabel.textAlignment = NSTextAlignmentCenter;
+                clientWorkStatusFlushLabel.font = [UIFont systemFontOfSize:18.0f];
+                clientWorkStatusFlushLabel.numberOfLines = 0;
+                clientWorkStatusFlushLabel.backgroundColor = [UIColor whiteColor];
+                [self.view addSubview:clientWorkStatusFlushLabel];
             }
 
             break;
@@ -765,8 +772,7 @@
 - (void)holdDownButtonTouchDown {
     self.isCancelled = NO;
     self.isRecording = NO;
-
-               
+    
  // 开始语音识别功能，之前必须实现MVoiceRecognitionClientDelegate协议中的VoiceRecognitionClientWorkStatus:obj方法
     int startStatus = -1;
     startStatus = [[BDVoiceRecognitionClient sharedInstance] startVoiceRecognition:self];

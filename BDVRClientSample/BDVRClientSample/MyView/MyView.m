@@ -39,11 +39,5 @@
     [path1 stroke];
     [path1 fill];
     
-    UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(MySize.width/2-50, MySize.height/2-50, 100,100)];
-    btn.backgroundColor = [UIColor yellowColor];
-    btn.layer.cornerRadius = (MySize.height/2-50);
-    btn.layer.masksToBounds = YES;
-    [self addSubview:btn];
-    
 }
 @end
