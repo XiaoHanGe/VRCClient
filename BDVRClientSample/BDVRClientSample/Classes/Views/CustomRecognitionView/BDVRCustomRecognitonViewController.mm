@@ -158,18 +158,17 @@
 // 初始化识别相关
 - (void)installReconginzing
 {
+    /*
     // 开始语音识别功能，之前必须实现MVoiceRecognitionClientDelegate协议中的VoiceRecognitionClientWorkStatus:obj方法
-//    int startStatus = -1;
-//    startStatus = [[BDVoiceRecognitionClient sharedInstance] startVoiceRecognition:self];
-//    if (startStatus != EVoiceRecognitionStartWorking) // 创建失败则报告错误
-//    {
-//        NSString *statusString = [NSString stringWithFormat:@"%d",startStatus];
-//        [self performSelector:@selector(firstStartError:) withObject:statusString afterDelay:0.3];  // 延迟0.3秒，以便能在出错时正常删除view
-//        return;
-//    }
-   
+    int startStatus = -1;
+    startStatus = [[BDVoiceRecognitionClient sharedInstance] startVoiceRecognition:self];
+    if (startStatus != EVoiceRecognitionStartWorking) // 创建失败则报告错误
+    {
+        NSString *statusString = [NSString stringWithFormat:@"%d",startStatus];
+        [self performSelector:@selector(firstStartError:) withObject:statusString afterDelay:0.3];  // 延迟0.3秒，以便能在出错时正常删除view
+        return;
+    }*/
 
-    
     
     // 是否需要播放开始说话提示音，如果是，则提示用户不要说话，在播放完成后再开始说话, 也就是收到EVoiceRecognitionClientWorkStatusStartWorkIng通知后再开始说话。
     if ([BDVRSConfig sharedInstance].playStartMusicSwitch)
@@ -301,7 +300,7 @@
             //         }
             //      ],
             //   ]
-//暂时关掉
+//暂时关掉 -- 否则影响跳转结果
 //            NSString *tmpString = [[BDVRSConfig sharedInstance] composeInputModeResult:aObj];
 //            [clientSampleViewController logOutToContinusManualResut:tmpString];
             
@@ -793,8 +792,7 @@
         [self performSelector:@selector(firstStartError:) withObject:statusString afterDelay:0.3];  // 延迟0.3秒，以便能在出错时正常删除view
         return;
     }
-    
-    // 按住说话提示
+    // "按住说话－松开搜索"提示
     [voiceImageStr removeFromSuperview];
     voiceImageStr = [[UIImageView alloc]initWithFrame:CGRectMake(kScreenWidth/2 - 40, kScreenHeight - 153, 80, 33)];
     voiceImageStr.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"searchVoice"]];
@@ -824,14 +822,6 @@
     _disPlayLink = nil;
     
     [[BDVoiceRecognitionClient sharedInstance] speakFinish];
-//    //如果已經開始錄音了, 才需要做結束的動作, 否則只要切換 isCancelled, 不讓錄音開始.
-//    if (self.isRecording) {
-//      // 完成动作
-//    
-//        
-//    } else {
-//        self.isCancelled = YES;
-//    }
 }
 
 - (void)holdDownDragOutside {
@@ -871,7 +861,7 @@
     return button;
 }
 
-#pragma mark ----------- 动画部分-----------
+#pragma mark ----------- 动画部分 -----------
 - (void)startAnimation
 {
     CALayer *layer = [[CALayer alloc] init];
@@ -914,26 +904,9 @@
     [layer removeFromSuperlayer];
 }
 
-//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-//{
-//    _disPlayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(delayAnimation)];
-//    _disPlayLink.frameInterval = 40;
-//    [_disPlayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-//}
 
 - (void)delayAnimation
 {
     [self startAnimation];
 }
-
-//- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-//{
-//    [self.view.layer removeAllAnimations];
-//    [_disPlayLink invalidate];
-//    _disPlayLink = nil;
-//}
-
-
-
-
 @end // BDVRCustomRecognitonViewController

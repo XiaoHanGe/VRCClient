@@ -47,17 +47,6 @@
                         <action selector="settingAction" destination="-1" eventType="touchUpInside" id="169"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="143">
-                    <rect key="frame" x="73" y="299" width="72" height="26"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                    <state key="normal" title="语音识别">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="voiceRecognitionAction" destination="-1" eventType="touchUpInside" id="179"/>
-                    </connections>
-                </button>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="3gD-hp-afi">
                     <rect key="frame" x="212" y="299" width="72" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -81,13 +70,26 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="8">
-                    <rect key="frame" x="279" y="102" width="28" height="37"/>
+                    <rect key="frame" x="257" y="102" width="50" height="37"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="识别UI" image="microphone.png">
+                    <state key="normal" title="Demo">
+                        <color key="titleColor" red="0.98431372549999996" green="0.2784313725" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
                         <action selector="sdkUIRecognitionAction" destination="-1" eventType="touchUpInside" id="168"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="143">
+                    <rect key="frame" x="108" y="165" width="72" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
+                    <state key="normal" title="自定义">
+                        <color key="titleColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="voiceRecognitionAction" destination="-1" eventType="touchUpInside" id="179"/>
                     </connections>
                 </button>
             </subviews>
@@ -95,7 +97,4 @@
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
-    <resources>
-        <image name="microphone.png" width="41" height="65"/>
-    </resources>
 </document>
