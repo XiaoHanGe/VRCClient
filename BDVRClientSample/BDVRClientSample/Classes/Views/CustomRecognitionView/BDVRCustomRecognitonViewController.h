@@ -21,11 +21,8 @@
     
     NSTimer *_voiceLevelMeterTimer; // 获取语音音量界别定时器
 }
-@property (nonatomic,retain) UIView *imgView;
-@property(nonatomic,strong) CALayer *staticLayer;
-@property(nonatomic,strong) CAGradientLayer *staticShadowLayer;
-@property (nonatomic) double getAddressTime;
-@property(nonatomic,strong)NSTimer *timer ;
+
+
 // 属性
 @property (nonatomic, retain) UIImageView *dialog;
 @property (nonatomic, strong) BDVRViewController *clientSampleViewController;
@@ -33,5 +30,6 @@
 
 // 方法
 - (void)cancel:(id)sender;
+
 
 @end // BDVRCustomRecognitonViewController

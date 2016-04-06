@@ -365,6 +365,7 @@
     
 }
 
+#pragma mark ------- 语音识别 ---------
 - (IBAction)voiceRecognitionAction
 {
     [self clean];
@@ -439,6 +440,7 @@
     self.audioViewController = tmpAudioViewController;
     
     [[UIApplication sharedApplication].keyWindow addSubview:_audioViewController.view];
+    
 
 }
 
@@ -529,6 +531,10 @@
     else
     {
         _resultView.text = [_resultView.text stringByAppendingString:aResult];
+        // 传值
+        MyViewController *myVC = [[MyViewController alloc]init];
+        myVC.string = tmpString;
+        [self presentModalViewController:myVC animated:YES];
     }
 }
 
